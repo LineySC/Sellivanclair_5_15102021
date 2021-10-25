@@ -57,7 +57,7 @@ fetch (url)
             let sendData = JSON.parse(localStorage.getItem('products'))||[];
 
             const itemOption = {
-                'article': article,
+                'article': article, 
                 'itemNumber': itemNumber,
                 'itemColors': itemColors
             };
@@ -78,20 +78,32 @@ fetch (url)
                 addToCart(itemColors, itemNumber);
             }
             else if(getDataLocal !== null){
-                getDataLocal.forEach(itemsLocal => {
-                    if(itemsLocal.article._id === article._id && itemsLocal.itemColors === itemColors) {
-                       const addItemsLocal =  parseInt(itemsLocal.itemNumber) + parseInt(itemNumber);
-                       console.log(addItemsLocal);
+                
+                let verifID = getDataLocal.map(produits => produits.article._id);
+                let verifColors = getDataLocal.map(produits => produits.itemColors);
 
-                       getDataLocal.push(addItemsLocal);
+                console.log(getDataLocal.itemNumber)
+
+                if(article._id = verifID){
+                    console.log("L'article est present ")
+
+                    if (article.colors = verifColors){
+
+                        newItemNumber = itemNumber + getDataLocal.itemNumber;
+                        console.log(newItemNumber)
+                        
+
                     }
-                    else{
-                        console.log("FALSE");
-                    }
-                })
+                }
+                
+                else{
+                    console.log("Un problème est survenue ")
+                }
+                
+
             }
             else {
-                console.log("Erreur lors de la vérification dans le localStorage")
+                console.log("Erreur lors de la vérification dans le localStorage"); 
             }
 
 
