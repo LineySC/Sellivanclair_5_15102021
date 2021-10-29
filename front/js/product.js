@@ -58,13 +58,13 @@ fetch (url)
 
             const itemOption = {
                 'article': article, 
-                'itemNumber': itemNumber,
+                'itemNumber': parseInt(itemNumber),
                 'itemColors': itemColors
             };
 
             sendData.push(itemOption);
 
-            const pushData = localStorage.setItem(['products'], JSON.stringify(sendData));
+            const pushData = localStorage.setItem('products', JSON.stringify(sendData));
         
         }
 
@@ -73,34 +73,37 @@ fetch (url)
         function checkLocal(itemColors, itemNumber) {
             
             let getDataLocal = JSON.parse(localStorage.getItem('products'));
-    
+            
+
+            //Verification SI localStorage est vide
+
             if(getDataLocal == null){
                 addToCart(itemColors, itemNumber);
             }
             else if(getDataLocal !== null){
                 
-                let verifID = getDataLocal.map(produits => produits.article._id);
-                let verifColors = getDataLocal.map(produits => produits.itemColors);
+                let findedId = getDataLocal.find(e => e.article._id == article._id);
+                let findedColors= getDataLocal.find(e => e.itemColors == itemColors)
 
-                console.log(getDataLocal.itemNumber)
+                //Vérification et modifications des éléments ajouté
 
-                if(article._id = verifID){
-                    console.log("L'article est present ")
+                if(findedId && findedColors){
+                    console.log("L'article est présent et la couleur est présent");
 
-                    if (article.colors = verifColors){
-
-                        newItemNumber = itemNumber + getDataLocal.itemNumber;
-                        console.log(newItemNumber)
-                        
-
-                    }
+                    findedId.itemNumber += parseInt(itemNumber);
+                    localStorage.setItem('products', JSON.stringify(getDataLocal));
+                    
                 }
-                
+                else if(findedId && !findedColors){
+                    console.log("L'article est présent mais la couleur est différente");
+
+                    addToCart(itemColors, itemNumber);
+                }
                 else{
-                    console.log("Un problème est survenue ")
-                }
-                
+                    console.log("Aucun élémént correspond à été trouvé");
 
+                    addToCart(itemColors, itemNumber);
+                }
             }
             else {
                 console.log("Erreur lors de la vérification dans le localStorage"); 
