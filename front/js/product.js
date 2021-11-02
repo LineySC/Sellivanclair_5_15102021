@@ -83,7 +83,7 @@ fetch (url)
             else if(getDataLocal !== null){
                 
                 let findedId = getDataLocal.find(e => e.article._id == article._id);
-                let findedColors= getDataLocal.find(e => e.itemColors == itemColors)
+                let findedColors= getDataLocal.find(e => e.itemColors == itemColors);
 
                 //Vérification et modifications des éléments ajouté
 
