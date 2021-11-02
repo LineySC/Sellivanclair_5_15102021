@@ -81,10 +81,35 @@ document.querySelectorAll('.itemQuantity').forEach(el => {
 })
 
 //Préparation de l'envoi => order.html
-		
+
+let firstName = document.getElementById('firstName').value;
+let lastName = document.getElementById('lastName').value;
+let address = document.getElementById('address').value;
+let city = document.getElementById('city').value;
+let email = document.getElementById('email').value;
+
+let regBasic = /[a-zA-Z -]/gm;
+let regAddress = /[a-zA-Z_. -]/gm;
+let regEmail = /[a-zA-Z0-9_.-]/gm;
+
+if(firstName, lastName, address, city !== regBasic){
+	console.log("Le prenom, le nom, ou l'adresse n'est pas bon")
+}
+else if(address !== regAddress){
+	console.log("L'adresse est dans un mauvais format");
+}
+else if(email !== regEmail){
+	console.log("l'E-mail n'est pas dans un bon format");
+}
+else{
+	console.log("Tous est ok");
+}
+
+
+
 //envoie vers la confirmation
 document.getElementById('order')
 		.addEventListener('click', function(){
 
-			document.location.replace('confirmation.html')
+			//document.location.replace('confirmation.html')
 		})
