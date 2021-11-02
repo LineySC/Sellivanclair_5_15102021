@@ -23,7 +23,7 @@ for (itemsData of arrayData) {
 			<div class="cart__item__content__settings">
 				<div class="cart__item__content__settings__quantity">
 				<p>Qté : </p>
-				<input type="number" class="itemQuantity" data-id="${itemsData.article._id}" name="itemQuantity" min="1" max="100" value="${itemsData.itemNumber}">
+				<input type="number" class="itemQuantity" data-id="${itemsData.article._id}" id="itemQuantity" name="itemQuantity" min="1" max="100" value="${itemsData.itemNumber}">
 				</div>
 				<div class="cart__item__content__settings__delete">
 				<p class="deleteItem" data-id="${itemsData.article._id}" data-color="${itemsData.itemColors}">Supprimer</p>
@@ -48,7 +48,6 @@ function deleteItem (id, color){
 
 	let findIndex = arrayData.findIndex(e => e.article._id == id && e.itemColors == color);
 
-	console.log(findIndex, id);
 	arrayData.splice(findIndex, 1);
 	localStorage.setItem('products', JSON.stringify(arrayData));
 
@@ -65,21 +64,17 @@ document.querySelectorAll('.deleteItem').forEach(el => {
 
 //Modification
 
-function modifyItemsQuantity(id){
-	let findIndex = arrayData.findIndex(e => e.article._id == id)
+function modifyItemsQuantity(id, value){
 
-	let modifyQuantity = document.querySelector('.itemQuantity').value
-
-	let totalQuantity = findIndex.itemNumber = modifyQuantity;
-	//localStorage.setItem('products', JSON.stringify(arrayData));
-
-	console.log(totalQuantity);
+	let findNumber = arrayData.find(e => e.article._id == id);
+	findNumber.itemNumber = parseInt(value)
+	localStorage.setItem('products', JSON.stringify(arrayData))
 }
 
 document.querySelectorAll('.itemQuantity').forEach(el => {
 
 	el.addEventListener('change', function(e){
-		modifyItemsQuantity(e.target.dataset.id);
+		modifyItemsQuantity(e.target.dataset.id, e.target.value);
 		window.location.reload();
 	})
 
