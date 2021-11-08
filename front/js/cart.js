@@ -81,39 +81,89 @@ document.querySelectorAll('.itemQuantity').forEach(el => {
 })
 
 //Préparation de l'envoi => order.html
-/*
-let firstName = document.getElementById('firstName').value;
-let lastName = document.getElementById('lastName').value;
-let address = document.getElementById('address').value;
-let city = document.getElementById('city').value;
-let email = document.getElementById('email').value;
 
+let firstName = document.getElementById('firstName');
+let lastName = document.getElementById('lastName');
+let address = document.getElementById('address');
+let city = document.getElementById('city');
+let email = document.getElementById('email');
+
+//Verification REGEX SIMPLE
+
+const regSimple = /^[a-zA-Z 'éçàëäï-]+$/gm
 
 firstName.addEventListener('change', function(){
-	//firstName.value ==  /^[a-zA-Z ,.'-éçàëäï]+$/gm;
-	//document.getElementById('firstNameErrorMsg').innerHTML = 
-	//		`Merci de renseigner un prénom valide`;
-	//console.log(firstName.value)
-
-	if(/^[a-zA-Z 'éçàëäï-]+$/gm.test(firstName.value)){
-		console.log("C'est ok");
+	if(regSimple.test(firstName.value)){
+		document.getElementById('firstNameErrorMsg').style.display = "none";
+		document.getElementById('order').disabled = false
 	}
 	else{
-		document.getElementById('firstNameErrorMsg').innerHTML = 
-			`Merci de renseigner un prénom valide`;
+		document.getElementById('order').disabled = true
+		document.getElementById('firstNameErrorMsg').style.display = "block";
+		document.getElementById('firstNameErrorMsg').innerHTML = `Merci de renseigner un prénom valide`;
 	}
-});*/
+});
 
+lastName.addEventListener('change', function(){
+	if(regSimple.test(lastName.value)){
+		document.getElementById('lastNameErrorMsg').style.display = "none";
+		document.getElementById('order').disabled = false
+	}
+	else{
+		document.getElementById('order').disabled = true
+		document.getElementById('lastNameErrorMsg').style.display = "block";
+		document.getElementById('lastNameErrorMsg').innerHTML = `Merci de renseigner un nom valide`;
+	}
+});
 
+city.addEventListener('change', function(){
+	if(regSimple.test(city.value)){
+		document.getElementById('cityErrorMsg').style.display = "none";
+		document.getElementById('order').disabled = false
+	}
+	else{
+		document.getElementById('order').disabled = true
+		document.getElementById('cityErrorMsg').style.display = "block";
+		document.getElementById('cityErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
+	}
+})
 
-function checkContact(){
-	let firstName = document.getElementById('firstName').value;
-	let lastName = document.getElementById('lastName').value;
-	let address = document.getElementById('address').value;
-	let city = document.getElementById('city').value;
-	let email = document.getElementById('email').value;
+//Verification REGEX Addresse
 
-	sendContact(firstName, lastName,address, city, email);
+const regAddress = /^[0-9]+[a-zA-Z 'éçàëäï-]+$/gm
+
+address.addEventListener('change', function(){
+	if(regAddress.test(address.value)){
+		document.getElementById('addressErrorMsg').style.display = "none";
+		document.getElementById('order').disabled = false
+	}
+	else{
+		document.getElementById('order').disabled = true
+		document.getElementById('addressErrorMsg').style.display = "block";
+		document.getElementById('addressErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
+	}
+})
+
+//Verification REGEX Email
+
+const regEmail = /[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+.[a-zA-Z]+$/gm
+
+email.addEventListener('change', function(){
+	if(regEmail.test(email.value)){
+		document.getElementById('emailErrorMsg').style.display = "none";
+		document.getElementById('order').disabled = false
+	}
+	else{
+		document.getElementById('order').disabled = true
+		document.getElementById('emailErrorMsg').style.display = "block";
+		document.getElementById('emailErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
+	}
+})
+
+function checkContact(firstName, lastName,address, city, email){
+
+		sendContact(firstName, lastName,address, city, email);
+
 }
 
 //Fonction POST avec les donnée demandé
@@ -127,7 +177,6 @@ function sendContact(firstName, lastName,address, city, email){
 		'email': email
 	}
 
-
 	let products = []; //Tableau contenant les différents items._id
 	for (const items of arrayData){
 		products.push(items.article._id)
@@ -136,7 +185,7 @@ function sendContact(firstName, lastName,address, city, email){
 
 	let dataReq = {contact, products}; //Objet avec les donnée contact et item LocalStorage
 
-	let urlOrder = 'http://127.0.0.1:3000/api/order';
+	let urlOrder = 'http://127.0.0.1:3000/api/products/order';
 
 	const postData = {
 		method: 'POST',
@@ -147,17 +196,21 @@ function sendContact(firstName, lastName,address, city, email){
 		body: JSON.stringify(dataReq)
 	};
 
+	//Fetch de la methode POST
+
 	fetch(urlOrder, postData)
 	.then((res) => {
 		if(res.ok){
 			return res.json();
 		}
 	})
+	// On stock provisoirement le numéro de commande et on la met dans l'url
+	// Suppression du localStorage des items ajouté
 	.then((response) => {
 
 		let orderId = response.orderId
-		console.log(response.orderId)
-		document.location.replace(`confirmation.html${orderId}`);
+		//document.location.replace(`confirmation.html?order=${orderId}`);
+		//localStorage.removeItem('products')
 
 	})
 	.catch((err) =>{console.log(err)})
@@ -168,7 +221,9 @@ function sendContact(firstName, lastName,address, city, email){
 //envoie vers la confirmation
 document.getElementById('order')
 		.addEventListener('click', function(){
-			checkContact();
+			checkContact(firstName, lastName,address, city, email);
 		})
+
+
 
 
