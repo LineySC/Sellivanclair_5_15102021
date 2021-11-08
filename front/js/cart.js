@@ -81,35 +81,94 @@ document.querySelectorAll('.itemQuantity').forEach(el => {
 })
 
 //Préparation de l'envoi => order.html
-
+/*
 let firstName = document.getElementById('firstName').value;
 let lastName = document.getElementById('lastName').value;
 let address = document.getElementById('address').value;
 let city = document.getElementById('city').value;
 let email = document.getElementById('email').value;
 
-let regBasic = /[a-zA-Z -]/gm;
-let regAddress = /[a-zA-Z_. -]/gm;
-let regEmail = /[a-zA-Z0-9_.-]/gm;
 
-if(firstName, lastName, address, city !== regBasic){
-	console.log("Le prenom, le nom, ou l'adresse n'est pas bon")
-}
-else if(address !== regAddress){
-	console.log("L'adresse est dans un mauvais format");
-}
-else if(email !== regEmail){
-	console.log("l'E-mail n'est pas dans un bon format");
-}
-else{
-	console.log("Tous est ok");
-}
+firstName.addEventListener('change', function(){
+	//firstName.value ==  /^[a-zA-Z ,.'-éçàëäï]+$/gm;
+	//document.getElementById('firstNameErrorMsg').innerHTML = 
+	//		`Merci de renseigner un prénom valide`;
+	//console.log(firstName.value)
+
+	if(/^[a-zA-Z 'éçàëäï-]+$/gm.test(firstName.value)){
+		console.log("C'est ok");
+	}
+	else{
+		document.getElementById('firstNameErrorMsg').innerHTML = 
+			`Merci de renseigner un prénom valide`;
+	}
+});*/
 
 
+
+function checkContact(){
+	let firstName = document.getElementById('firstName').value;
+	let lastName = document.getElementById('lastName').value;
+	let address = document.getElementById('address').value;
+	let city = document.getElementById('city').value;
+	let email = document.getElementById('email').value;
+
+	sendContact(firstName, lastName,address, city, email);
+}
+
+//Fonction POST avec les donnée demandé
+function sendContact(firstName, lastName,address, city, email){ 
+
+	let contact = {
+		'firstName' : firstName,
+		'lastName': lastName,
+		'address': address,
+		'city': city,
+		'email': email
+	}
+
+
+	let products = []; //Tableau contenant les différents items._id
+	for (const items of arrayData){
+		products.push(items.article._id)
+
+	}
+
+	let dataReq = {contact, products}; //Objet avec les donnée contact et item LocalStorage
+
+	let urlOrder = 'http://127.0.0.1:3000/api/order';
+
+	const postData = {
+		method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+		body: JSON.stringify(dataReq)
+	};
+
+	fetch(urlOrder, postData)
+	.then((res) => {
+		if(res.ok){
+			return res.json();
+		}
+	})
+	.then((response) => {
+
+		let orderId = response.orderId
+		console.log(response.orderId)
+		document.location.replace(`confirmation.html${orderId}`);
+
+	})
+	.catch((err) =>{console.log(err)})
+
+	
+}
 
 //envoie vers la confirmation
 document.getElementById('order')
 		.addEventListener('click', function(){
-
-			//document.location.replace('confirmation.html')
+			checkContact();
 		})
+
+
