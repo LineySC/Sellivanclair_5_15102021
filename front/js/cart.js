@@ -1,6 +1,6 @@
 let arrayData = JSON.parse(localStorage.getItem('products'))||[];
 
-let totalPrice = 0;
+let totalPrice = 0; 
 let totalQuantity = 0;
 
 //Gestion suppression du/des article(s)
@@ -66,8 +66,8 @@ document.querySelectorAll('.deleteItem').forEach(el => {
 function modifyItemsQuantity(id, value){
 
 	let findNumber = arrayData.find(e => e.article._id == id);
-	findNumber.itemNumber = parseInt(value)
-	localStorage.setItem('products', JSON.stringify(arrayData))
+	findNumber.itemNumber = parseInt(value);
+	localStorage.setItem('products', JSON.stringify(arrayData));
 }
 
 document.querySelectorAll('.itemQuantity').forEach(el => {
@@ -94,11 +94,11 @@ const regSimple = /^[a-zA-Z 'éçàëäï-]+$/gm
 function checkFirstName(){ //FirstName
 	if(firstName.value.match(regSimple)){
 		document.getElementById('firstNameErrorMsg').style.display = "none";
-		document.getElementById('order').disabled = false
+		document.getElementById('order').disabled = false;
 		return true
 	}
 	else{
-		document.getElementById('order').disabled = true
+		document.getElementById('order').disabled = true;
 		document.getElementById('firstNameErrorMsg').style.display = "block";
 		document.getElementById('firstNameErrorMsg').innerHTML = `Merci de renseigner un prénom valide`;
 		return false
@@ -112,12 +112,14 @@ firstName.addEventListener('change', function(){
 function checkLastName(){ // LastName
 	if(lastName.value.match(regSimple)){
 		document.getElementById('lastNameErrorMsg').style.display = "none";
-		document.getElementById('order').disabled = false
+		document.getElementById('order').disabled = false;
+		return true
 	}
 	else{
-		document.getElementById('order').disabled = true
+		document.getElementById('order').disabled = true;
 		document.getElementById('lastNameErrorMsg').style.display = "block";
 		document.getElementById('lastNameErrorMsg').innerHTML = `Merci de renseigner un nom valide`;
+		return false
 	}
 }
 
@@ -128,12 +130,14 @@ lastName.addEventListener('change', function(){
 function checkCity(){ // City
 	if(city.value.match(regSimple)){
 		document.getElementById('cityErrorMsg').style.display = "none";
-		document.getElementById('order').disabled = false
+		document.getElementById('order').disabled = false;
+		return true;
 	}
 	else{
-		document.getElementById('order').disabled = true
+		document.getElementById('order').disabled = true;
 		document.getElementById('cityErrorMsg').style.display = "block";
 		document.getElementById('cityErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
+		return false;
 	}
 }
 
@@ -149,11 +153,13 @@ function checkAddress() {
 	if(address.value.match(regAddress)){
 		document.getElementById('addressErrorMsg').style.display = "none";
 		document.getElementById('order').disabled = false
+		return true;
 	}
 	else{
-		document.getElementById('order').disabled = true
+		document.getElementById('order').disabled = true;
 		document.getElementById('addressErrorMsg').style.display = "block";
-		document.getElementById('addressErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
+		document.getElementById('addressErrorMsg').innerHTML = `Merci de renseigner une adresse  valide`;
+		return false;
 	}
 }
 
@@ -168,12 +174,14 @@ const regEmail = /[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+.[a-zA-Z]+$/gm
 function checkEmail(){
 	if(email.value.match(regEmail)){
 		document.getElementById('emailErrorMsg').style.display = "none";
-		document.getElementById('order').disabled = false
+		document.getElementById('order').disabled = false;
+		return true;
 	}
 	else{
-		document.getElementById('order').disabled = true
+		document.getElementById('order').disabled = true;
 		document.getElementById('emailErrorMsg').style.display = "block";
 		document.getElementById('emailErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
+		return false;
 	}
 }
 
@@ -181,13 +189,10 @@ email.addEventListener('change', function(){
 	checkEmail();
 })
 
-
-
+//Vérification de la globalité des Input
 function checkContact(firstName, lastName,address, city, email){
-
 	if(checkFirstName() && checkLastName() && checkCity() && checkAddress() && checkEmail()){
 		sendContact(firstName, lastName,address, city, email);
-
 	}
 }
 
@@ -204,6 +209,7 @@ function sendContact(firstName, lastName,address, city, email){
 
 	let products = []; //Tableau contenant les différents items._id
 	for (const items of arrayData){
+
 		products.push(items.article._id)
 
 	}
@@ -229,12 +235,11 @@ function sendContact(firstName, lastName,address, city, email){
 			return res.json();
 		}
 	})
-	// On stock provisoirement le numéro de commande et on la met dans l'url
+	// On stock provisoirement le numéro de commande dans l'url
 	// Suppression du localStorage des items ajouté
 	.then((response) => {
 
-		let orderId = response.orderId
-		document.location.replace(`confirmation.html?order=${orderId}`);
+		document.location.replace(`confirmation.html?order=${response.orderId}`);
 		localStorage.removeItem('products')
 
 	})

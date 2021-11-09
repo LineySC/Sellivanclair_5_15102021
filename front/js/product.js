@@ -32,87 +32,83 @@ fetch (url)
         }; // Couleurs
 
 
-//Vérification des élements choisi
-        function checkBeforeAdd (itemColors, itemNumber){
+    //Vérification des élements choisi
+    function checkBeforeAdd (itemColors, itemNumber){
 
-            if(itemColors === '' && itemNumber == 0){
-                alert("Merci de choisir une couleur et un nombre d'article souhaité");
-            }
-            else if(itemNumber == 0) {
-                alert("Merci de choisir un nombre d'article souhaité.")
-            }
-            else if(itemColors === ''){
-                alert("Merci d'indiqué la couleur de l'article.");
-            }
-            else{
-                checkLocal(itemColors, itemNumber);
-            }
-
+        if(itemColors === '' && itemNumber == 0){
+              alert("Merci de choisir une couleur et un nombre d'article souhaité");
         }
+        else if(itemNumber == 0) {
+            alert("Merci de choisir un nombre d'article souhaité.")
+        }
+        else if(itemColors === ''){
+             alert("Merci d'indiqué la couleur de l'article.");
+        }
+        else{
+            checkLocal(itemColors, itemNumber);
+        }
+
+    }
         
 
-//Fonction d'ajout au panier
-        function addToCart(itemColors, itemNumber) {
+    //Fonction d'ajout au panier
+    function addToCart(itemColors, itemNumber) {
 
-            let sendData = JSON.parse(localStorage.getItem('products'))||[];
+        let sendData = JSON.parse(localStorage.getItem('products'))||[];
 
-            const itemOption = {
-                'article': article, 
-                'itemNumber': parseInt(itemNumber),
-                'itemColors': itemColors
+        const itemOption = {
+            'article': article, 
+            'itemNumber': parseInt(itemNumber),
+            'itemColors': itemColors
             };
 
-            sendData.push(itemOption);
+        sendData.push(itemOption);
 
-            const pushData = localStorage.setItem('products', JSON.stringify(sendData));
-        
-        }
+        const pushData = localStorage.setItem('products', JSON.stringify(sendData));
 
-//Fonction de vérification du LOCALSTORAGE
+}
 
-        function checkLocal(itemColors, itemNumber) {
-            
-            let getDataLocal = JSON.parse(localStorage.getItem('products'));
-            
-
-            //Verification SI localStorage est vide
-
-            if(getDataLocal == null){
-                addToCart(itemColors, itemNumber);
-            }
-            else if(getDataLocal !== null){
+    //Fonction de vérification du LOCALSTORAGE
+    function checkLocal(itemColors, itemNumber) {
                 
-                let findedId = getDataLocal.find(e => e.article._id == article._id);
-                let findedColors= getDataLocal.find(e => e.itemColors == itemColors && e.article._id == article._id);
+        let getDataLocal = JSON.parse(localStorage.getItem('products'));
+                
+        //Verification SI localStorage est vide
+        if(getDataLocal == null){
 
-                //Vérification et modifications des éléments ajouté
-
-                if(findedId && findedColors){
-                    console.log("L'article est présent et la couleur est présent");
-
-                    findedColors.itemNumber += parseInt(itemNumber);
-                    localStorage.setItem('products', JSON.stringify(getDataLocal));
-                    
-                }
-                else if(findedId && !findedColors){
-                    console.log("L'article est présent mais la couleur est différente");
-
-                    addToCart(itemColors, itemNumber);
-                }
-                else{
-                    console.log("Aucun élémént correspond à été trouvé");
-
-                    addToCart(itemColors, itemNumber);
-                }
-            }
-            else {
-                console.log("Erreur lors de la vérification dans le localStorage"); 
-            }
-
+            addToCart(itemColors, itemNumber);
 
         }
+        else if(getDataLocal !== null){
+                    
+            let findedId = getDataLocal.find(e => e.article._id == article._id);
+            let findedColors= getDataLocal.find(e => e.itemColors == itemColors && e.article._id == article._id);
 
-//Récupération du bouton et envoie des données
+            //Vérification et modifications des éléments ajouté
+            if(findedId && findedColors){
+
+                findedColors.itemNumber += parseInt(itemNumber);
+                localStorage.setItem('products', JSON.stringify(getDataLocal));
+                        
+            }
+            else if(findedId && !findedColors){
+
+                addToCart(itemColors, itemNumber);
+                    }
+                    else{
+                        console.log("Aucun élémént correspond à été trouvé");
+
+                        addToCart(itemColors, itemNumber);
+                    }
+                }
+                else {
+                    console.log("Erreur lors de la vérification dans le localStorage"); 
+                }
+
+
+            }
+
+        //Récupération du bouton et envoie des données
         document.getElementById('addToCart')
                 .addEventListener('click', function(event) {
                     const itemColors = document.getElementById('colors').value;
@@ -123,7 +119,7 @@ fetch (url)
                 });
 
     })
-    .catch(err => {console.log(err)})
+.catch(err => {console.log(err)})
 
 
 
