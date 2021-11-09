@@ -1,5 +1,4 @@
-let getArrayData = localStorage.getItem('products');
-let arrayData = JSON.parse(getArrayData);
+let arrayData = JSON.parse(localStorage.getItem('products'))||[];
 
 let totalPrice = 0;
 let totalQuantity = 0;
@@ -92,20 +91,26 @@ let email = document.getElementById('email');
 
 const regSimple = /^[a-zA-Z 'éçàëäï-]+$/gm
 
-firstName.addEventListener('change', function(){
-	if(regSimple.test(firstName.value)){
+function checkFirstName(){ //FirstName
+	if(firstName.value.match(regSimple)){
 		document.getElementById('firstNameErrorMsg').style.display = "none";
 		document.getElementById('order').disabled = false
+		return true
 	}
 	else{
 		document.getElementById('order').disabled = true
 		document.getElementById('firstNameErrorMsg').style.display = "block";
 		document.getElementById('firstNameErrorMsg').innerHTML = `Merci de renseigner un prénom valide`;
+		return false
 	}
+}
+
+firstName.addEventListener('change', function(){
+	checkFirstName();
 });
 
-lastName.addEventListener('change', function(){
-	if(regSimple.test(lastName.value)){
+function checkLastName(){ // LastName
+	if(lastName.value.match(regSimple)){
 		document.getElementById('lastNameErrorMsg').style.display = "none";
 		document.getElementById('order').disabled = false
 	}
@@ -114,10 +119,14 @@ lastName.addEventListener('change', function(){
 		document.getElementById('lastNameErrorMsg').style.display = "block";
 		document.getElementById('lastNameErrorMsg').innerHTML = `Merci de renseigner un nom valide`;
 	}
+}
+
+lastName.addEventListener('change', function(){
+	checkLastName();
 });
 
-city.addEventListener('change', function(){
-	if(regSimple.test(city.value)){
+function checkCity(){ // City
+	if(city.value.match(regSimple)){
 		document.getElementById('cityErrorMsg').style.display = "none";
 		document.getElementById('order').disabled = false
 	}
@@ -126,14 +135,18 @@ city.addEventListener('change', function(){
 		document.getElementById('cityErrorMsg').style.display = "block";
 		document.getElementById('cityErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
 	}
+}
+
+city.addEventListener('change', function(){
+	checkCity();
 })
 
 //Verification REGEX Addresse
 
 const regAddress = /^[0-9]+[a-zA-Z 'éçàëäï-]+$/gm
 
-address.addEventListener('change', function(){
-	if(regAddress.test(address.value)){
+function checkAddress() {
+	if(address.value.match(regAddress)){
 		document.getElementById('addressErrorMsg').style.display = "none";
 		document.getElementById('order').disabled = false
 	}
@@ -142,14 +155,18 @@ address.addEventListener('change', function(){
 		document.getElementById('addressErrorMsg').style.display = "block";
 		document.getElementById('addressErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
 	}
+}
+
+address.addEventListener('change', function(){
+	checkAddress();
 })
 
 //Verification REGEX Email
 
 const regEmail = /[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+.[a-zA-Z]+$/gm
 
-email.addEventListener('change', function(){
-	if(regEmail.test(email.value)){
+function checkEmail(){
+	if(email.value.match(regEmail)){
 		document.getElementById('emailErrorMsg').style.display = "none";
 		document.getElementById('order').disabled = false
 	}
@@ -158,12 +175,20 @@ email.addEventListener('change', function(){
 		document.getElementById('emailErrorMsg').style.display = "block";
 		document.getElementById('emailErrorMsg').innerHTML = `Merci de renseigner un nom de ville valide`;
 	}
+}
+
+email.addEventListener('change', function(){
+	checkEmail();
 })
+
+
 
 function checkContact(firstName, lastName,address, city, email){
 
+	if(checkFirstName() && checkLastName() && checkCity() && checkAddress() && checkEmail()){
 		sendContact(firstName, lastName,address, city, email);
 
+	}
 }
 
 //Fonction POST avec les donnée demandé
@@ -209,8 +234,8 @@ function sendContact(firstName, lastName,address, city, email){
 	.then((response) => {
 
 		let orderId = response.orderId
-		//document.location.replace(`confirmation.html?order=${orderId}`);
-		//localStorage.removeItem('products')
+		document.location.replace(`confirmation.html?order=${orderId}`);
+		localStorage.removeItem('products')
 
 	})
 	.catch((err) =>{console.log(err)})

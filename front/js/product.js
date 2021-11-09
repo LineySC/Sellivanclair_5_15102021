@@ -83,14 +83,14 @@ fetch (url)
             else if(getDataLocal !== null){
                 
                 let findedId = getDataLocal.find(e => e.article._id == article._id);
-                let findedColors= getDataLocal.find(e => e.itemColors == itemColors);
+                let findedColors= getDataLocal.find(e => e.itemColors == itemColors && e.article._id == article._id);
 
                 //Vérification et modifications des éléments ajouté
 
                 if(findedId && findedColors){
                     console.log("L'article est présent et la couleur est présent");
 
-                    findedId.itemNumber += parseInt(itemNumber);
+                    findedColors.itemNumber += parseInt(itemNumber);
                     localStorage.setItem('products', JSON.stringify(getDataLocal));
                     
                 }
